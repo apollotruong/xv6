@@ -229,7 +229,6 @@ exit(int status)
 {
   struct proc *curproc = myproc();
   struct proc *p;
-
   int fd;
 
   if(curproc == initproc)
