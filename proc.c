@@ -313,6 +313,47 @@ wait(int *status)
   }
 }
 
+int waitpid(int pid, int *status, int options){
+  struct proc *p;
+  int temp_pid, got_pid;
+
+  acquire(&ptable.lock);
+  for(;;){
+    got_pid = 0;
+    for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+      if(p->pid == pid){
+	got_pid = 1;
+	if(p->state == ZOMBIE){
+	  temp_pid = p->pid;
+	  kfree(p->kstack);
+	  p->kstack = 0;
+          freevm(p->pgdir);
+	  p->pid = 0;
+	  p->parent = 0;
+	  p->name[0] = 0;
+	  p->killed = 0;
+	  p->state = UNUSED;
+	  *status = p->status;
+	  p->status = 0;
+	  release(&ptable.lock);
+	  return temp_pid;
+	}
+       	else{
+//	  proc->wait_pid = p->pid;
+	  break;
+	}
+     }
+   }
+    if (got_pid == 0 /*|| proc->killed*/){
+//	release(&ptatable.lock);
+	return -1;
+    }
+    else if(got_pid == 1){
+//	sleep(proc, &ptable.lock);
+    }
+  }
+}
+
 //PAGEBREAK: 42
 // Per-CPU process scheduler.
 // Each CPU calls scheduler() after setting itself up.
