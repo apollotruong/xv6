@@ -51,13 +51,15 @@ struct proc {
   char name[16];               // Process name (debugging)
   int status;
   int wait_pid;
+//  int waitpid(int pid, int *status, int options);
 //  void exit(int status);
 };
-
+ 
+int waitpid(int pid, int *status, int options);
 void exit(int status);
 
 // Process memory is laid out contiguously, low addresses first:
 //   text
 //   original data and bss
-//   fixed-size stack
+//   fixed-size stack  
 //   expandable heap
