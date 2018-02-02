@@ -21,6 +21,7 @@
 00000dac base
 00000390 strcpy
 00000060 fmtname
+00000652 waitpid
 00000700 printf
 00000580 memmove
 000005fa mknod

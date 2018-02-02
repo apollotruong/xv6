@@ -19,6 +19,7 @@
 00000a08 freep
 00000a0c base
 00000080 strcpy
+00000342 waitpid
 000003f0 printf
 00000270 memmove
 000002ea mknod
