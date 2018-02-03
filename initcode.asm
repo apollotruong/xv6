@@ -17,7 +17,7 @@ start:
   pushl $0  // where caller pc would be
    a:	6a 00                	push   $0x0
   movl $SYS_exec, %eax
-   c:	b8 08 00 00 00       	mov    $0x8,%eax
+   c:	b8 07 00 00 00       	mov    $0x7,%eax
   int $T_SYSCALL
   11:	cd 40                	int    $0x40
 

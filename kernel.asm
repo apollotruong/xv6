@@ -15038,17 +15038,17 @@ sys_wait(int *status)
 {
 80105350:	55                   	push   %ebp
 80105351:	89 e5                	mov    %esp,%ebp
-  return wait(status);
+  return wait(0);
+80105353:	c7 45 08 00 00 00 00 	movl   $0x0,0x8(%ebp)
 }
-80105353:	5d                   	pop    %ebp
+8010535a:	5d                   	pop    %ebp
 }
 
 int
 sys_wait(int *status)
 {
-  return wait(status);
-80105354:	e9 77 e9 ff ff       	jmp    80103cd0 <wait>
-80105359:	8d b4 26 00 00 00 00 	lea    0x0(%esi,%eiz,1),%esi
+  return wait(0);
+8010535b:	e9 70 e9 ff ff       	jmp    80103cd0 <wait>
 
 80105360 <sys_waitpid>:
 }
@@ -15068,19 +15068,19 @@ sys_waitpid(void)
 80105369:	89 44 24 04          	mov    %eax,0x4(%esp)
 8010536d:	c7 04 24 00 00 00 00 	movl   $0x0,(%esp)
 80105374:	e8 27 f3 ff ff       	call   801046a0 <argint>
-  argptr(0, (char**)&status, sizeof(int*));
+  argptr(1, (char**)&status, sizeof(int*));
 80105379:	8d 45 f0             	lea    -0x10(%ebp),%eax
 8010537c:	c7 44 24 08 04 00 00 	movl   $0x4,0x8(%esp)
 80105383:	00 
 80105384:	89 44 24 04          	mov    %eax,0x4(%esp)
-80105388:	c7 04 24 00 00 00 00 	movl   $0x0,(%esp)
+80105388:	c7 04 24 01 00 00 00 	movl   $0x1,(%esp)
 8010538f:	e8 3c f3 ff ff       	call   801046d0 <argptr>
   argint(0, &options);
 80105394:	8d 45 f4             	lea    -0xc(%ebp),%eax
 80105397:	89 44 24 04          	mov    %eax,0x4(%esp)
 8010539b:	c7 04 24 00 00 00 00 	movl   $0x0,(%esp)
 801053a2:	e8 f9 f2 ff ff       	call   801046a0 <argint>
-  waitpid(pid, status, options);
+  return  waitpid(pid, status, options);
 801053a7:	8b 45 f4             	mov    -0xc(%ebp),%eax
 801053aa:	89 44 24 08          	mov    %eax,0x8(%esp)
 801053ae:	8b 45 f0             	mov    -0x10(%ebp),%eax
@@ -15089,13 +15089,12 @@ sys_waitpid(void)
 801053b8:	89 04 24             	mov    %eax,(%esp)
 801053bb:	e8 00 ea ff ff       	call   80103dc0 <waitpid>
  
-  return 0;
+
 }
-801053c0:	31 c0                	xor    %eax,%eax
-801053c2:	c9                   	leave  
-801053c3:	c3                   	ret    
-801053c4:	8d b6 00 00 00 00    	lea    0x0(%esi),%esi
-801053ca:	8d bf 00 00 00 00    	lea    0x0(%edi),%edi
+801053c0:	c9                   	leave  
+801053c1:	c3                   	ret    
+801053c2:	8d b4 26 00 00 00 00 	lea    0x0(%esi,%eiz,1),%esi
+801053c9:	8d bc 27 00 00 00 00 	lea    0x0(%edi,%eiz,1),%edi
 
 801053d0 <sys_kill>:
 
