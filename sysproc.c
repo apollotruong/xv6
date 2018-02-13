@@ -40,7 +40,7 @@ sys_waitpid(void)
 
   argint(0, &pid);
   argptr(1, (char**)&status, sizeof(int*));
-  argint(0, &options);
+  argint(2, &options);
   return  waitpid(pid, status, options);
  
 
