@@ -269,8 +269,8 @@ exit(int status)
 
   curproc->status = status;
 
-  if (curproc->priority != curproc->original_priority)
-	curproc->priority = curproc->original_priority;
+  if (curproc->priority != curproc->old_priority)
+	curproc->priority = curproc->old_priority;
 
 
   // Jump into the scheduler, never to return.
@@ -610,13 +610,14 @@ procdump(void)
 
 int priority(int prty){
   acquire(&ptable.lock);
-  if (prty < 0 || prty > 64) {
+  struct proc * p;
+  if (prty < 0 || prty > 31) {
      panic("invalid priority num");
      return -1;
   }
-  proc->priority = prty; //added lab2
-  proc->original_priority = prty; //added lab2
-  proc->state = RUNNABLE; //added lab2
+  p->priority = prty; //added lab2
+  p->old_priority = prty; //added lab2
+  p->state = RUNNABLE; //added lab2
   release(&ptable.lock);
   yield();
   return prty;

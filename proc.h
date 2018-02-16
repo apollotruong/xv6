@@ -59,7 +59,7 @@ struct proc {
  
 int waitpid(int pid, int *status, int options);
 void exit(int status);
-
+int priority(int prio);
 // Process memory is laid out contiguously, low addresses first:
 //   text
 //   original data and bss
