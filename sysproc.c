@@ -109,3 +109,17 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+/* THIS PIECE OF CODE IS ADDED TO SWITCH THE PRIORITY
+OF A PROCESS
+*/
+int
+sys_priority(void){
+  int prty;
+    argptr(0,(char**)&prty,sizeof(int*));
+    return -1;
+
+    return priority(prty);
+
+
+}

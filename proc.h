@@ -51,6 +51,8 @@ struct proc {
   char name[16];               // Process name (debugging)
   int status;
   int wait_pid;
+  int priority;
+  int old_priority;
 //  int waitpid(int pid, int *status, int options);
 //  void exit(int status);
 };

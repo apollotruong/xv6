@@ -14,6 +14,7 @@ struct {
 
 static struct proc *initproc;
 
+
 int nextpid = 1;
 extern void forkret(void);
 extern void trapret(void);
@@ -88,6 +89,7 @@ allocproc(void)
 found:
   p->state = EMBRYO;
   p->pid = nextpid++;
+  p->priority = 31; // added
 
   release(&ptable.lock);
 
@@ -210,11 +212,15 @@ fork(void)
 
   safestrcpy(np->name, curproc->name, sizeof(curproc->name));
 
+  
+
   pid = np->pid;
 
   acquire(&ptable.lock);
 
   np->state = RUNNABLE;
+  np->priority = 31; // added lab2
+  np->old_priority = 31; // added lab2
 
   release(&ptable.lock);
 
@@ -262,6 +268,10 @@ exit(int status)
   }
 
   curproc->status = status;
+
+  if (curproc->priority != curproc->original_priority)
+	curproc->priority = curproc->original_priority;
+
 
   // Jump into the scheduler, never to return.
   curproc->state = ZOMBIE;
@@ -373,7 +383,9 @@ void
 scheduler(void)
 {
   struct proc *p;
+  struct proc *q;
   struct cpu *c = mycpu();
+  int hi_prty = 0;
   c->proc = 0;
   
   for(;;){
@@ -386,6 +398,19 @@ scheduler(void)
       if(p->state != RUNNABLE)
         continue;
 
+      // ADDED get the higest priorty from ptable
+      for(q = ptable.proc; q < &ptable.proc[NPROC]; q++){
+        if( q->state != RUNNABLE){
+          continue;
+        }
+        if(hi_prty < q->priority){ // reset the max priority to new value; 
+          hi_prty= q->priority;
+        }
+      }
+      // ADDED end *******************************
+      if(p->priority < hi_prty){ // if priority is 
+        continue;
+      }
       // Switch to chosen process.  It is the process's job
       // to release ptable.lock and then reacquire it
       // before jumping back to us.
@@ -581,4 +606,18 @@ procdump(void)
     }
     cprintf("\n");
   }
+}
+
+int priority(int prty){
+  acquire(&ptable.lock);
+  if (prty < 0 || prty > 64) {
+     panic("invalid priority num");
+     return -1;
+  }
+  proc->priority = prty; //added lab2
+  proc->original_priority = prty; //added lab2
+  proc->state = RUNNABLE; //added lab2
+  release(&ptable.lock);
+  yield();
+  return prty;
 }
