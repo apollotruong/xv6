@@ -383,7 +383,6 @@ void
 scheduler(void)
 {
   struct proc *p;
-  struct proc *q;
   struct cpu *c = mycpu();
   int hi_prty = 0;
   c->proc = 0;
@@ -393,24 +392,30 @@ scheduler(void)
     sti();
 
     // Loop over process table looking for process to run.
-    acquire(&ptable.lock);
-    for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
-      if(p->state != RUNNABLE)
-        continue;
-
+    
+    //for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+     // if(p->state != RUNNABLE)
+      //  continue;
+	hi_prty = 0;
       // ADDED get the higest priorty from ptable
-      for(q = ptable.proc; q < &ptable.proc[NPROC]; q++){
-        if( q->state != RUNNABLE){
+      for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+        if( p->state != RUNNABLE){
           continue;
         }
-        if(hi_prty < q->priority){ // reset the max priority to new value; 
-          hi_prty= q->priority;
+        if(hi_prty < p->priority){ // reset the max priority to new value; 
+          hi_prty= p->priority;
         }
       }
       // ADDED end *******************************
-      if(p->priority < hi_prty){ // if priority is 
-        continue;
-      }
+      acquire(&ptable.lock);
+      for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+	if(p->state!=RUNNABLE){
+		continue;
+	}
+	if(p->priority < hi_prty){ // added to check priority
+	   continue; 
+	}
+      
       // Switch to chosen process.  It is the process's job
       // to release ptable.lock and then reacquire it
       // before jumping back to us.
@@ -424,7 +429,7 @@ scheduler(void)
       // Process is done running for now.
       // It should have changed its p->state before coming back.
       c->proc = 0;
-    }
+      }
     release(&ptable.lock);
 
   }
@@ -608,17 +613,11 @@ procdump(void)
   }
 }
 
-int priority(int prty){
-  acquire(&ptable.lock);
-  struct proc * p;
+void setpriority(int prty){
+  struct proc * p = myproc();
   if (prty < 0 || prty > 31) {
-     panic("invalid priority num");
-     return -1;
+     return;
   }
   p->priority = prty; //added lab2
-  p->old_priority = prty; //added lab2
-  p->state = RUNNABLE; //added lab2
-  release(&ptable.lock);
-  yield();
-  return prty;
+  return;
 }

@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
   printf(1, "\n This program tests the correctness of your lab#2\n");
   
 	PScheduler();
-	return 0;
+	exit(0);
  }
   
     
@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
 			for(k=0;k<10000;k++) {
 				asm("nop"); }}
 		printf(1, "\n child# %d with priority %d has finished! \n",getpid(),30-10*i);		
-		exit();
+		exit(0);
         }
         else {
 			printf(2," \n Error \n");
@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
 
 	if(pid > 0) {
 		for (i = 0; i <  3; i++) {
-			wait();
+			wait(0);
 
 		}
                      printf(1,"\n if processes with highest priority finished first then its correct \n");

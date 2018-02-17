@@ -113,13 +113,12 @@ sys_uptime(void)
 /* THIS PIECE OF CODE IS ADDED TO SWITCH THE PRIORITY
 OF A PROCESS
 */
-int
-sys_priority(void){
-  int prty;
-    argptr(0,(char**)&prty,sizeof(int*));
-    return -1;
+void
+sys_setpriority(void){
+  int prio;
+    argint(0, &prio);
 
-    return priority(prty);
+    setpriority(prio);
 
 
 }

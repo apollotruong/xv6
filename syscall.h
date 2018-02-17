@@ -21,8 +21,10 @@
 #define SYS_mkdir  20
 #define SYS_close  21
 #define SYS_waitpid 22
-#define SYS_priority 23
+#define SYS_setpriority 23
+
 // System call numbers
+
 #define SYS_fork    1
 #define SYS_exit    2
 #define SYS_wait    3
@@ -45,4 +47,4 @@
 #define SYS_mkdir  20
 #define SYS_close  21
 #define SYS_waitpid 22
-#define SYS_priority 23
+#define SYS_setpriority 23
