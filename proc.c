@@ -410,11 +410,18 @@ scheduler(void)
       acquire(&ptable.lock);
       for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
 	if(p->state!=RUNNABLE){
+//		if(p->priority <= hi_prty){
+//			p->priority += 5;
+//		}
 		continue;
 	}
 	if(p->priority < hi_prty){ // added to check priority
-	   continue; 
+		continue; 
 	}
+        if(p->priority <= hi_prty){
+                p->priority += 10;
+        }       
+
       
       // Switch to chosen process.  It is the process's job
       // to release ptable.lock and then reacquire it
@@ -422,6 +429,8 @@ scheduler(void)
       c->proc = p;
       switchuvm(p);
       p->state = RUNNING;
+
+	if(c->proc->state == RUNNING && c->proc->priority >= 10){ c->proc->priority -= 10;}
 
       swtch(&(c->scheduler), p->context);
       switchkvm();
